@@ -58,24 +58,24 @@
 
     "cpu": {
         "interval": 1,
-        "format": "{icon} {usage}%",
-        "format-icons": [""],
+        "format": "<span color='#bd93f9'>{icon}</span> {usage}%",
+        "format-icons": [""],
         "tooltip": true
     },
     
     "memory": {
         "interval": 1,
-        "format": "{icon} {percentage}%",
-        "format-icons": [""],
+        "format": "<span color='#bd93f9'>{icon}</span> {percentage}%",
+        "format-icons": [""],
         "tooltip-format": "RAM: {used:0.1f}G / {total:0.1f}G\nSwap: {swapUsed:0.1f}G / {swapTotal:0.1f}G"
     },
     
     "temperature": {
         "interval": 1,
         "critical-threshold": 90,
-        "format": "{icon} {temperatureC}°C",
-        "format-critical": "{icon} {temperatureC}°C",
-        "format-icons": ["", "", ""]
+        "format": "<span color='#bd93f9'>{icon}</span> {temperatureC}°C",
+        "format-critical": "<span color='#ff5555'>{icon}</span> {temperatureC}°C",
+        "format-icons": ["", "", ""]
     },
     
     "battery": {
@@ -84,13 +84,13 @@
             "warning": 30,
             "critical": 15
         },
-        "format": "{icon} {capacity}%",
-        "format-icons": ["", "", "", "", ""]
+        "format": "<span color='#bd93f9'>{icon}</span> {capacity}%",
+        "format-icons": ["", "", "", "", ""]
     },
     
     "wireplumber": {
-        "format": "{icon} {volume}%",
-        "format-muted": "󰖁 muted",
+        "format": "<span color='#bd93f9'>{icon}</span> {volume}%",
+        "format-muted": "<span color='#bd93f9'>󰖁</span> muted",
         "format-icons": ["󰕿", "󰖀", "󰕾"],
         "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
         "on-click-right": "pavucontrol",
