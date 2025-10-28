@@ -3,7 +3,12 @@
 # Random Wallpaper Script for Hyprland
 # Sets a random wallpaper from ~/backgrounds directory using hyprpaper
 
-WALLPAPER_DIR="$HOME/arch-hyprland/backgrounds"
+WALLPAPER_DIR="$HOME/backgrounds"
+
+# Resolve symlink if it is one
+if [ -L "$WALLPAPER_DIR" ]; then
+    WALLPAPER_DIR=$(readlink -f "$WALLPAPER_DIR")
+fi
 
 # Check if wallpaper directory exists
 if [ ! -d "$WALLPAPER_DIR" ]; then
