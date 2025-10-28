@@ -2,7 +2,7 @@
 * {
     border: none;
     border-radius: 0;
-    font-family: Iosevka;
+    font-family: 'JetBrainsMono Nerd Font', monospace;
     font-size: 11pt;
     min-height: 0;
 }
@@ -35,4 +35,7 @@ window#waybar {
 #clock {
     padding: 0 4px;
     background: @background;
+}
+tooltip {
+    font-family: "JetBrainsMono Nerd Font";
 }
