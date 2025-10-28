@@ -70,8 +70,6 @@
     
     "temperature": {
         "interval": 1,
-        "thermal-zone": 8,
-        "hwmon-path": "/sys/devices/platform/coretemp.0/hwmon/hwmon7/temp1_input",
         "critical-threshold": 90,
         "format": "{icon} {temperatureC}°C",
         "format-critical": "{icon} {temperatureC}°C",
@@ -80,17 +78,11 @@
     
     "battery": {
         "interval": 1,
-        "bat": "BAT0",
-        "adapter": "AC",
-        "full-at": 100,
         "states": {
             "warning": 30,
             "critical": 15
         },
         "format": "{icon} {capacity}%",
-        "format-charging": " {capacity}%",
-        "format-plugged": " {capacity}%",
-        "format-full": "{icon} {capacity}%",
         "format-icons": ["", "", "", "", ""]
     },
     

@@ -2,15 +2,15 @@
 * {
     border: none;
     border-radius: 0;
-    font-family: 'JetBrainsMono Nerd Font', monospace;
+    font-family: 'Overpass Nerd Font';
     font-size: 11pt;
     min-height: 0;
 }
 window#waybar {
-    opacity: 0.9;
+    /* opacity: 0.9; */
     background: @background-darker;
     color: @foreground;
-    border-bottom: 2px solid @background;
+    /* border-bottom: 2px solid @background; */
 }
 #workspaces button {
     padding: 0 6px;
@@ -37,6 +37,15 @@ window#waybar {
 #clock {
     padding: 0 4px;
     background: @background;
+}
+#battery.warning {
+    color: @yellow;
+}
+#battery.critical {
+    color: @red;
+}
+#temperature.critical {
+    color: @red;
 }
 tooltip {
     font-family: "JetBrainsMono Nerd Font";

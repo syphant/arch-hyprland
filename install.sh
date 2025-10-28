@@ -8,11 +8,11 @@
 set -e  # Exit on error
 
 # Colors for output (Dracula theme)
-RED='\033[38;2;255;85;85m'      # #ff5555
-PURPLE='\033[38;2;189;147;249m' # #bd93f9
-PINK='\033[38;2;255;121;198m'   # #ff79c6
-CYAN='\033[38;2;139;233;253m'   # #8be9fd
-NC='\033[0m' # No Color
+RED='\e[38;2;255;85;85m'        # #ff5555
+PURPLE='\e[38;2;189;147;249m'   # #bd93f9
+PINK='\e[38;2;255;121;198m'     # #ff79c6
+CYAN='\e[38;2;139;233;253m'     # #8be9fd
+NC='\e[0m' # No Color
 
 print_step() {
     echo -e "${CYAN}==>${NC} ${PURPLE}$1${NC}"
@@ -778,7 +778,17 @@ if git clone https://github.com/m4thewz/dracula-icons.git; then
     
     # The repository root IS the icon theme - copy it as "Dracula"
     if [ -d "dracula-icons" ]; then
+        # Remove existing Dracula icon theme if it exists
+        rm -rf "$HOME_DIR/.local/share/icons/Dracula"
+        
+        # Copy the entire dracula-icons directory as the theme
         cp -r dracula-icons "$HOME_DIR/.local/share/icons/Dracula"
+        
+        # Update icon cache
+        if command -v gtk-update-icon-cache &> /dev/null; then
+            gtk-update-icon-cache -f -t "$HOME_DIR/.local/share/icons/Dracula" 2>/dev/null || true
+        fi
+        
         print_step "Dracula icon theme installed successfully!"
     else
         print_error "Repository directory not found after cloning"
@@ -837,6 +847,13 @@ gtk-xft-hinting=1
 gtk-xft-hintstyle=hintslight
 gtk-xft-rgba=rgb
 EOF
+
+# GTK4 also needs the GTK3 theme available
+mkdir -p "$HOME_DIR/.config/gtk-4.0"
+if [ -d "$HOME_DIR/.themes/Dracula" ] && [ ! -L "$HOME_DIR/.config/gtk-4.0/gtk.css" ]; then
+    ln -sf "$HOME_DIR/.themes/Dracula/gtk-4.0/gtk.css" "$HOME_DIR/.config/gtk-4.0/gtk.css" 2>/dev/null || true
+    ln -sf "$HOME_DIR/.themes/Dracula/gtk-4.0/gtk-dark.css" "$HOME_DIR/.config/gtk-4.0/gtk-dark.css" 2>/dev/null || true
+fi
 
 print_step "GTK theme configured!"
 
@@ -921,12 +938,21 @@ theme=Dracula
 EOF
 
 # Set environment variables for Qt theme
-if ! grep -q "QT_QPA_PLATFORMTHEME" "$HOME_DIR/.profile" 2>/dev/null; then
+if ! grep -q "QT_QPA_PLATFORMTHEME=qt5ct" "$HOME_DIR/.profile" 2>/dev/null; then
     echo 'export QT_QPA_PLATFORMTHEME=qt5ct' >> "$HOME_DIR/.profile"
 fi
 
-if ! grep -q "QT_QPA_PLATFORMTHEME" "$HOME_DIR/.zprofile" 2>/dev/null; then
+if ! grep -q "QT_QPA_PLATFORMTHEME=qt5ct" "$HOME_DIR/.zprofile" 2>/dev/null; then
     echo 'export QT_QPA_PLATFORMTHEME=qt5ct' >> "$HOME_DIR/.zprofile"
+fi
+
+# Set GTK theme environment variable
+if ! grep -q "GTK_THEME=Dracula" "$HOME_DIR/.profile" 2>/dev/null; then
+    echo 'export GTK_THEME=Dracula' >> "$HOME_DIR/.profile"
+fi
+
+if ! grep -q "GTK_THEME=Dracula" "$HOME_DIR/.zprofile" 2>/dev/null; then
+    echo 'export GTK_THEME=Dracula' >> "$HOME_DIR/.zprofile"
 fi
 
 print_step "Qt theme configured!"
