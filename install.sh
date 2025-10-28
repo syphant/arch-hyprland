@@ -355,7 +355,7 @@ OFFICIAL_PACKAGES=(
     hyprlock
     hypridle
     hyprpicker
-    xwayland
+    xorg-xwayland
     waybar
     wofi
     grim
