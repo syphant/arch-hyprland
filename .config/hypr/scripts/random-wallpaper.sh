@@ -30,17 +30,6 @@ RANDOM_WALLPAPER="${WALLPAPERS[RANDOM % ${#WALLPAPERS[@]}]}"
 
 echo "Setting wallpaper: $RANDOM_WALLPAPER"
 
-# Kill existing hyprpaper instance if running
-pkill hyprpaper
-
-# Start hyprpaper with the selected wallpaper
-hyprpaper &
-
-# Wait a moment for hyprpaper to start
-sleep 0.5
-
-# Configure hyprpaper via hyprctl
-hyprctl hyprpaper preload "$RANDOM_WALLPAPER"
-hyprctl hyprpaper wallpaper ",$RANDOM_WALLPAPER"
+hyprctl hyprpaper reload ",$RANDOM_WALLPAPER"
 
 echo "Wallpaper set successfully!"
