@@ -155,36 +155,59 @@ fi
 print_step "NetworkManager is active"
 
 #######################################
-# Copy dotfiles to home directory     #
+# Link dotfiles to home directory     #
 #######################################
 
-print_step "Copying dotfiles to home directory..."
+print_step "Creating symbolic links for dotfiles..."
 
-# Copy all files and directories except README.md and install.sh
-shopt -s dotglob  # Include hidden files
-for item in "$SCRIPT_DIR"/*; do
-    basename_item=$(basename "$item")
+# Define items to symlink
+ITEMS_TO_LINK=(
+    ".config"
+    ".local"
+    "backgrounds"
+    ".zprofile"
+    ".zshrc"
+)
+
+# Create symlinks for each item
+for item in "${ITEMS_TO_LINK[@]}"; do
+    SOURCE="$SCRIPT_DIR/$item"
+    TARGET="$HOME_DIR/$item"
     
-    # Skip README.md, install.sh, and .git directory
-    if [[ "$basename_item" == "README.md" ]] || \
-       [[ "$basename_item" == "install.sh" ]] || \
-       [[ "$basename_item" == ".git" ]] || \
-       [[ "$basename_item" == ".gitignore" ]]; then
+    # Check if source exists in repo
+    if [ ! -e "$SOURCE" ]; then
+        print_warning "$item not found in repository, skipping..."
         continue
     fi
     
-    # Backup existing files/directories
-    if [ -e "$HOME_DIR/$basename_item" ]; then
-        print_warning "Backing up existing $basename_item to ${basename_item}.backup"
-        mv "$HOME_DIR/$basename_item" "$HOME_DIR/${basename_item}.backup"
+    # Handle existing files/directories
+    if [ -e "$TARGET" ] || [ -L "$TARGET" ]; then
+        if [ -L "$TARGET" ]; then
+            # It's already a symlink
+            CURRENT_LINK=$(readlink -f "$TARGET")
+            if [ "$CURRENT_LINK" = "$SOURCE" ]; then
+                echo "  $item already linked correctly"
+                continue
+            else
+                print_warning "Removing existing symlink: $item"
+                rm "$TARGET"
+            fi
+        else
+            # It's a real file/directory - back it up
+            print_warning "Backing up existing $item to ${item}.backup"
+            mv "$TARGET" "$HOME_DIR/${item}.backup"
+        fi
     fi
     
-    # Copy the item
-    cp -r "$item" "$HOME_DIR/"
-    echo "  Copied: $basename_item"
+    # Create the symlink
+    ln -s "$SOURCE" "$TARGET"
+    echo "  Linked: $item -> $SOURCE"
 done
 
-print_step "Dotfiles copied successfully!"
+print_step "Dotfiles linked successfully!"
+echo ""
+print_step "Note: You can now update your dotfiles by running 'git pull' in:"
+echo "  $SCRIPT_DIR"
 
 # Enable auto-suspend for laptops
 if [ "$IS_LAPTOP" = true ]; then
@@ -388,6 +411,7 @@ OFFICIAL_PACKAGES=(
     pipewire-pulse
     pavucontrol
     playerctl
+    noto-fonts-emoji
     polkit
     ffmpeg
     mkvtoolnix-cli
