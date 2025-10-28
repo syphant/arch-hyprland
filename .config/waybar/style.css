@@ -39,6 +39,14 @@ window#waybar {
     padding: 0 4px;
     background: @background;
 }
+#cpu,
+#memory,
+#temperature,
+#battery,
+#wireplumber,
+#tray {
+    color: @purple;
+}
 #battery.warning {
     color: @yellow;
 }
