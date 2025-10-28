@@ -41,9 +41,9 @@ HOME_DIR="$HOME"
 #######################################
 
 echo ""
-echo -e "${CYAN}╔════════════════════════════════════════╗${NC}"
-echo -e "${CYAN}║  Arch Linux Hyprland Post-Install Setup ║${NC}"
-echo -e "${CYAN}╚════════════════════════════════════════╝${NC}"
+echo -e "${CYAN}╔══════════════════════════════════════════╗${NC}"
+echo -e "${CYAN}║  Arch Linux Hyprland Post-Install Setup  ║${NC}"
+echo -e "${CYAN}╚══════════════════════════════════════════╝${NC}"
 echo ""
 echo -e "${PINK}Is this a desktop or a laptop?${NC}"
 echo "  1) Desktop"
@@ -446,8 +446,8 @@ AUR_PACKAGES=(
     ttf-gohu-nerd
     ttf-0xproto-nerd
     visual-studio-code-bin
-    gtk-engine-murrine
-    gtk-engines
+    # gtk-engine-murrine # broken
+    # gtk-engines # broken
 )
 
 # Install official packages
