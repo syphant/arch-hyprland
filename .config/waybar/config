@@ -19,7 +19,6 @@
         "cpu",
         "memory",
         "battery",
-        "custom/weather",
         "clock"
     ],
         
@@ -53,18 +52,18 @@
     },
 
     "tray": {
-        "spacing": 4
+        "spacing": 8
     },
 
     "cpu": {
         "interval": 1,
-        "format": " {usage}%",
+        "format": " {usage}%",
         "tooltip": true
     },
     
     "memory": {
         "interval": 1,
-        "format": " {percentage}%",
+        "format": " {percentage}%",
         "tooltip-format": "RAM: {used:0.1f}G / {total:0.1f}G\nSwap: {swapUsed:0.1f}G / {swapTotal:0.1f}G"
     },
     
@@ -75,7 +74,7 @@
         "critical-threshold": 90,
         "format": "{icon} {temperatureC}°C",
         "format-critical": "{icon} {temperatureC}°C",
-        "format-icons": ["", "", ""]
+        "format-icons": ["", "", ""]
     },
     
     "battery": {
@@ -91,7 +90,7 @@
         "format-charging": " {capacity}%",
         "format-plugged": " {capacity}%",
         "format-full": "{icon} {capacity}%",
-        "format-icons": ["", "", "", "", ""]
+        "format-icons": ["", "", "", "", ""]
     },
     
     "wireplumber": {
@@ -101,13 +100,5 @@
         "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
         "on-click-right": "pavucontrol",
         "scroll-step": 5
-    },
-
-    "custom/weather": {
-        "exec": "~/.config/waybar/wittr.sh",
-        "return-type": "json",
-        "format": "{}",
-        "tooltip": true,
-        "interval": 300
     }
 }

@@ -25,9 +25,11 @@ window#waybar {
 #workspaces button.focused,
 #workspaces button.active {
     background: @purple;
+    color: @background;
 }
 #workspaces button.urgent {
     background: @red;
+    color: @background;
 }
 #taskbar button.active {
     background: @selection;
@@ -38,4 +40,5 @@ window#waybar {
 }
 tooltip {
     font-family: "JetBrainsMono Nerd Font";
+    background: @background;
 }
