@@ -393,6 +393,7 @@ OFFICIAL_PACKAGES=(
     mkvtoolnix-cli
     papirus-icon-theme
     nwg-look
+    ttf-droid
     sassc
     gnome-themes-extra
     bluez
@@ -406,6 +407,8 @@ OFFICIAL_PACKAGES=(
     winetricks
     qt5-wayland
     qt6-wayland
+    celluloid
+    font-manager
 )
 
 # Add laptop-specific packages
@@ -443,8 +446,6 @@ OFFICIAL_PACKAGES+=("$KERNEL_HEADERS")
 echo "  Will install: $KERNEL_HEADERS"
 
 AUR_PACKAGES=(
-    ttf-gohu-nerd
-    ttf-0xproto-nerd
     visual-studio-code-bin
     # gtk-engine-murrine # broken
     # gtk-engines # broken
