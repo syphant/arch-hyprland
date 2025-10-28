@@ -7,15 +7,15 @@
 
 set -e  # Exit on error
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
+# Colors for output (Dracula theme)
+RED='\033[38;2;255;85;85m'      # #ff5555
+PURPLE='\033[38;2;189;147;249m' # #bd93f9
+PINK='\033[38;2;255;121;198m'   # #ff79c6
+CYAN='\033[38;2;139;233;253m'   # #8be9fd
 NC='\033[0m' # No Color
 
 print_step() {
-    echo -e "${BLUE}==>${NC} ${GREEN}$1${NC}"
+    echo -e "${CYAN}==>${NC} ${PURPLE}$1${NC}"
 }
 
 print_error() {
@@ -23,7 +23,7 @@ print_error() {
 }
 
 print_warning() {
-    echo -e "${YELLOW}WARNING:${NC} $1"
+    echo -e "${PINK}WARNING:${NC} $1"
 }
 
 # Check if running as root
@@ -41,11 +41,11 @@ HOME_DIR="$HOME"
 #######################################
 
 echo ""
-echo -e "${BLUE}╔════════════════════════════════════════╗${NC}"
-echo -e "${BLUE}║  Arch Linux Hyprland Post-Install Setup ║${NC}"
-echo -e "${BLUE}╚════════════════════════════════════════╝${NC}"
+echo -e "${CYAN}╔════════════════════════════════════════╗${NC}"
+echo -e "${CYAN}║  Arch Linux Hyprland Post-Install Setup ║${NC}"
+echo -e "${CYAN}╚════════════════════════════════════════╝${NC}"
 echo ""
-echo -e "${YELLOW}Is this a desktop or a laptop?${NC}"
+echo -e "${PINK}Is this a desktop or a laptop?${NC}"
 echo "  1) Desktop"
 echo "  2) Laptop"
 echo ""
@@ -72,7 +72,7 @@ echo ""
 # Choose GPU Type                     #
 #######################################
 
-echo -e "${YELLOW}Which GPU do you have?${NC}"
+echo -e "${PINK}Which GPU do you have?${NC}"
 echo "  1) Intel"
 echo "  2) AMD"
 echo "  3) NVIDIA"
@@ -93,7 +93,7 @@ case $GPU_CHOICE in
     3)
         GPU_TYPE="nvidia"
         echo ""
-        echo -e "${YELLOW}Which NVIDIA driver version?${NC}"
+        echo -e "${PINK}Which NVIDIA driver version?${NC}"
         echo "  1) Legacy (nvidia) - For GTX 10 series or older"
         echo "  2) Open (nvidia-open) - For GTX 16 series / RTX 20 series or newer"
         echo ""
@@ -132,8 +132,8 @@ print_step "Verifying NetworkManager setup..."
 if ! systemctl is-active --quiet NetworkManager; then
     print_error "NetworkManager is not running!"
     echo ""
-    echo -e "${YELLOW}This script requires NetworkManager to be installed and running.${NC}"
-    echo -e "${BLUE}Please:${NC}"
+    echo -e "${PINK}This script requires NetworkManager to be installed and running.${NC}"
+    echo -e "${CYAN}Please:${NC}"
     echo "  1. Install NetworkManager: sudo pacman -S networkmanager"
     echo "  2. Enable it: sudo systemctl enable NetworkManager"
     echo "  3. Start it: sudo systemctl start NetworkManager"
@@ -146,7 +146,7 @@ fi
 if systemctl is-active --quiet systemd-networkd; then
     print_warning "systemd-networkd is active and may conflict with NetworkManager!"
     echo ""
-    echo -e "${YELLOW}It's recommended to disable systemd-networkd:${NC}"
+    echo -e "${PINK}It's recommended to disable systemd-networkd:${NC}"
     echo "  sudo systemctl stop systemd-networkd"
     echo "  sudo systemctl disable systemd-networkd"
     echo ""
@@ -394,8 +394,6 @@ OFFICIAL_PACKAGES=(
     papirus-icon-theme
     nwg-look
     sassc
-    gtk-engine-murrine
-    gtk-engines
     gnome-themes-extra
     bluez
     bluez-utils
@@ -448,6 +446,8 @@ AUR_PACKAGES=(
     ttf-gohu-nerd
     ttf-0xproto-nerd
     visual-studio-code-bin
+    gtk-engine-murrine
+    gtk-engines
 )
 
 # Install official packages
@@ -955,17 +955,17 @@ fi
 #######################################
 
 echo ""
-echo -e "${GREEN}╔════════════════════════════════════════╗${NC}"
-echo -e "${GREEN}║  Installation completed successfully!  ║${NC}"
-echo -e "${GREEN}╚════════════════════════════════════════╝${NC}"
+echo -e "${PURPLE}╔════════════════════════════════════════╗${NC}"
+echo -e "${PURPLE}║  Installation completed successfully!  ║${NC}"
+echo -e "${PURPLE}╚════════════════════════════════════════╝${NC}"
 echo ""
-echo -e "${YELLOW}Next steps:${NC}"
+echo -e "${PINK}Next steps:${NC}"
 echo "1. Review the copied configuration files in your home directory"
 echo "2. Add wallpapers to ~/backgrounds/ directory"
 echo "3. Reboot your system to apply all changes"
 echo "4. Launch Hyprland from TTY with the 'Hyprland' command"
 echo ""
-echo -e "${BLUE}Installed features:${NC}"
+echo -e "${CYAN}Installed features:${NC}"
 echo "✓ Hyprland (Wayland compositor)"
 echo "✓ Waybar (status bar)"
 echo "✓ Wofi (application launcher)"
@@ -984,7 +984,7 @@ echo "✓ Optimized mirror list with reflector"
 echo ""
 
 if [ "$IS_LAPTOP" = true ]; then
-    echo -e "${BLUE}Power Management Tips:${NC}"
+    echo -e "${CYAN}Power Management Tips:${NC}"
     echo "- Check TLP status: 'sudo tlp-stat -s'"
     echo "- Check power consumption: 'sudo powertop'"
     echo ""
