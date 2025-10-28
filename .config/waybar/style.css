@@ -2,8 +2,8 @@
 * {
     border: none;
     border-radius: 0;
-    font-family: 'OverpassM Nerd Font SemiBold';
-    font-size: 12pt;
+    font-family: 'OverpassM Nerd Font Bold';
+    font-size: 11pt;
     min-height: 0;
 }
 window#waybar {
