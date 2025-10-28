@@ -58,7 +58,8 @@
 
     "cpu": {
         "interval": 1,
-        "format": " {usage}%",
+        "format": "{icon} {usage}%",
+        "format-icons": [""],
         "tooltip": true
     },
     
