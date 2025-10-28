@@ -2,7 +2,7 @@
 * {
     border: none;
     border-radius: 0;
-    font-family: 'Overpass Nerd Font';
+    font-family: 'OverpassM Nerd Font';
     font-size: 11pt;
     min-height: 0;
 }
@@ -48,6 +48,6 @@ window#waybar {
     color: @red;
 }
 tooltip {
-    font-family: "JetBrainsMono Nerd Font";
+    font-family: "OverpassM Nerd Font";
     background: @background;
 }
