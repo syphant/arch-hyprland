@@ -48,7 +48,7 @@
 
     "clock": {
         "interval": 1,
-        "format": "{:%a %m/%d/%Y %I:%M:%S %p}",
+        "format": "<span color='#bd93f9'>{:%a %m/%d/%Y %I:%M:%S %p}</span>",
         "tooltip-format": "<tt><small>{calendar}</small></tt>"
     },
 
