@@ -39,7 +39,7 @@ if ! pgrep -x hyprpaper > /dev/null; then
     hyprctl hyprpaper wallpaper ",$RANDOM_WALLPAPER"
 else
     # hyprpaper is already running, use reload for smooth transition
-    hyprctl hyprpaper wallpaper ",$RANDOM_WALLPAPER"
+    hyprctl hyprpaper reload ",$RANDOM_WALLPAPER"
 fi
 
 echo "Wallpaper set successfully!"
