@@ -30,6 +30,16 @@ RANDOM_WALLPAPER="${WALLPAPERS[RANDOM % ${#WALLPAPERS[@]}]}"
 
 echo "Setting wallpaper: $RANDOM_WALLPAPER"
 
-hyprctl hyprpaper reload ",$RANDOM_WALLPAPER"
+# Check if hyprpaper is running
+if ! pgrep -x hyprpaper > /dev/null; then
+    # Start hyprpaper and use preload + wallpaper
+    hyprpaper &
+    sleep 0.5
+    hyprctl hyprpaper preload "$RANDOM_WALLPAPER"
+    hyprctl hyprpaper wallpaper ",$RANDOM_WALLPAPER"
+else
+    # hyprpaper is already running, use reload for smooth transition
+    hyprctl hyprpaper wallpaper ",$RANDOM_WALLPAPER"
+fi
 
 echo "Wallpaper set successfully!"
