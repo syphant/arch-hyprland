@@ -384,7 +384,9 @@ OFFICIAL_PACKAGES=(
     grim
     slurp
     wl-clipboard
-    cliphist
+    clipse
+    python-gobject
+    wtype
     wl-clip-persist
     imv
     jq
@@ -471,8 +473,9 @@ echo "  Will install: $KERNEL_HEADERS"
 
 AUR_PACKAGES=(
     visual-studio-code-bin
-    # gtk-engine-murrine # broken
-    # gtk-engines # broken
+    clipse-gui
+    # gtk-engine-murrine # Broken after move from main repos to AUR - 10.28.2025
+    # gtk-engines # Broken after move from main repos to AUR - 10.28.2025
 )
 
 # Install official packages
