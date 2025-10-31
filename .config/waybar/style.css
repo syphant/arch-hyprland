@@ -3,7 +3,7 @@
     border: none;
     border-radius: 0;
     font-family: 'JetBrainsMono Nerd Font';
-    font-weight: 600;
+    font-weight: 400;
     font-size: 11pt;
     min-height: 0;
 }
@@ -47,8 +47,4 @@ window#waybar {
 }
 #temperature.critical {
     color: @red;
-}
-tooltip {
-    font-family: "OverpassM Nerd Font SemiBold";
-    background: @background;
 }
