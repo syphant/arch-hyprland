@@ -742,98 +742,100 @@ else
 fi
 
 #######################################
-# Install Dracula GTK Theme           #
+# Install Catppuccin GTK & Kvantum    #
 #######################################
 
-print_step "Installing Dracula GTK theme..."
+print_step "Installing Catppuccin GTK theme (Lavender Dark Compact variant)..."
 
 # Create themes directory
 mkdir -p "$HOME_DIR/.themes"
 
-# Clone and install Dracula theme
 cd /tmp
-rm -rf gtk
-git clone https://github.com/dracula/gtk.git
+rm -rf Catppuccin-GTK-Theme kvantum
 
-if [ ! -d "gtk" ]; then
-    print_error "Failed to clone Dracula GTK theme repository"
-    cd "$SCRIPT_DIR"
+# Clone Catppuccin GTK theme source (Fausto-Korpsvart fork)
+if git clone --depth 1 https://github.com/Fausto-Korpsvart/Catppuccin-GTK-Theme.git; then
+    print_step "Catppuccin GTK repository cloned"
 else
-    cp -r gtk "$HOME_DIR/.themes/Dracula"
-    print_step "Dracula GTK theme installed!"
-    
-    #######################################
-    # Install Dracula Qt/Kvantum Theme    #
-    #######################################
-    
-    print_step "Installing Dracula Qt/Kvantum theme..."
-    
-    # Install kvantum and qt configuration tools
-    yay -S --needed --noconfirm kvantum kvantum-qt5 qt5ct qt6ct
-    
-    # Create Kvantum themes directory
-    mkdir -p "$HOME_DIR/.config/Kvantum"
-    
-    # Copy Kvantum theme from the cloned gtk repo
-    if [ -d "gtk/kde/kvantum/Dracula" ]; then
-        cp -r gtk/kde/kvantum/Dracula "$HOME_DIR/.config/Kvantum/"
-        print_step "Dracula Kvantum theme installed!"
-    else
-        print_error "Dracula Kvantum theme not found in repository"
-    fi
-    
-    # Clean up
+    print_error "Failed to clone Catppuccin GTK theme repository"
     cd "$SCRIPT_DIR"
-    rm -rf /tmp/gtk
 fi
 
-#######################################
-# Install Dracula Icons               #
-#######################################
+# Build & install only Dark Lavender Compact variant using upstream script
+CATPPUCCIN_GTK_VARIANT="Catppuccin-Lavender-Dark-Compact"  # Resulting theme directory name
+if [ -d Catppuccin-GTK-Theme/themes ]; then
+    pushd Catppuccin-GTK-Theme/themes >/dev/null || true
+    # Ensure sassc exists (already installed earlier, but double-check quietly)
+    if ! command -v sassc >/dev/null 2>&1; then
+        print_warning "sassc not found, installing..."
+        sudo pacman -S --needed --noconfirm sassc
+    fi
+    # Run upstream install script for dark + lavender accent + compact size (user-level destination)
+    ./install.sh --color dark --theme lavender --size compact --dest "$HOME_DIR/.themes" >/dev/null 2>&1 || print_warning "Catppuccin GTK install script reported issues"
+    popd >/dev/null || true
+    if [ -d "$HOME_DIR/.themes/$CATPPUCCIN_GTK_VARIANT" ]; then
+        print_step "Catppuccin GTK theme installed: $CATPPUCCIN_GTK_VARIANT"
+    else
+        print_warning "Expected theme directory $CATPPUCCIN_GTK_VARIANT not found; falling back to copying source (unbuilt)"
+        # Fallback: copy raw src (not ideal, but provides placeholder)
+        cp -r Catppuccin-GTK-Theme "$HOME_DIR/.themes/Catppuccin-Raw" || true
+    fi
+else
+    print_error "Catppuccin GTK themes directory missing"
+fi
 
-print_step "Installing Dracula icon theme..."
+print_step "Installing Catppuccin Kvantum theme (mocha lavender)..."
 
-# Create icons directory
+# Install Catppuccin icons (flavor tied to dark lavender accent -> choose Mocha base)
+print_step "Installing Catppuccin icon theme (Mocha)..."
 mkdir -p "$HOME_DIR/.local/share/icons"
-
-# Clone Dracula icons
-cd /tmp
-rm -rf dracula-icons
-
-if git clone https://github.com/m4thewz/dracula-icons.git; then
-    print_step "Successfully cloned Dracula icons repository"
-    
-    # The repository root IS the icon theme - copy it as "Dracula"
-    if [ -d "dracula-icons" ]; then
-        # Remove existing Dracula icon theme if it exists
-        rm -rf "$HOME_DIR/.local/share/icons/Dracula"
-        
-        # Copy the entire dracula-icons directory as the theme
-        cp -r dracula-icons "$HOME_DIR/.local/share/icons/Dracula"
-        
-        # Update icon cache
-        if command -v gtk-update-icon-cache &> /dev/null; then
-            gtk-update-icon-cache -f -t "$HOME_DIR/.local/share/icons/Dracula" 2>/dev/null || true
-        fi
-        
-        print_step "Dracula icon theme installed successfully!"
-    else
-        print_error "Repository directory not found after cloning"
+if [ -d Catppuccin-GTK-Theme/icons/Catppuccin-Mocha ]; then
+    rm -rf "$HOME_DIR/.local/share/icons/Catppuccin-Mocha" 2>/dev/null || true
+    cp -r Catppuccin-GTK-Theme/icons/Catppuccin-Mocha "$HOME_DIR/.local/share/icons/"
+    # Update icon cache if available
+    if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+        gtk-update-icon-cache -f -t "$HOME_DIR/.local/share/icons/Catppuccin-Mocha" 2>/dev/null || true
     fi
+    print_step "Catppuccin icon theme installed: Catppuccin-Mocha"
 else
-    print_error "Failed to clone Dracula icons repository"
-    print_warning "This may be due to network issues or repository unavailability"
+    print_warning "Catppuccin-Mocha icon directory not found; skipping icon theme install"
 fi
 
-# Cleanup
-cd "$SCRIPT_DIR"
-rm -rf /tmp/dracula-icons
+# Install kvantum and qt configuration tools (if not yet)
+yay -S --needed --noconfirm kvantum kvantum-qt5 qt5ct qt6ct
+
+mkdir -p "$HOME_DIR/.config/Kvantum"
+
+# Clone Kvantum Catppuccin themes
+if git clone --depth 1 https://github.com/catppuccin/kvantum.git; then
+    print_step "Catppuccin Kvantum repository cloned"
+    if [ -d kvantum/themes/catppuccin-mocha-lavender ]; then
+        rm -rf "$HOME_DIR/.config/Kvantum/catppuccin-mocha-lavender" 2>/dev/null || true
+        cp -r kvantum/themes/catppuccin-mocha-lavender "$HOME_DIR/.config/Kvantum/"
+        print_step "Catppuccin Kvantum theme installed: catppuccin-mocha-lavender"
+    else
+        print_error "Desired Kvantum theme folder catppuccin-mocha-lavender not found"
+    fi
+else
+    print_error "Failed to clone Catppuccin Kvantum repository"
+fi
+
+# Cleanup temp
+rm -rf /tmp/Catppuccin-GTK-Theme /tmp/kvantum
+
+
+#######################################
+# (Removed) Dracula icons block       #
+#######################################
+# Catppuccin GTK build already ships matching symbolic/icons assets.
+# If you later want a distinct icon theme (Papirus, Catppuccin icons repo, etc.)
+# add an install block here.
 
 #######################################
 # Configure GTK Theme                 #
 #######################################
 
-print_step "Configuring GTK theme..."
+print_step "Configuring GTK theme (Catppuccin Lavender Dark Compact)..."
 
 # Create necessary directories
 mkdir -p "$HOME_DIR/.config/gtk-3.0"
@@ -842,8 +844,8 @@ mkdir -p "$HOME_DIR/.config/gtk-4.0"
 # Configure GTK3
 tee "$HOME_DIR/.config/gtk-3.0/settings.ini" > /dev/null <<'EOF'
 [Settings]
-gtk-theme-name=Dracula
-gtk-icon-theme-name=Dracula
+gtk-theme-name=Catppuccin-Lavender-Dark-Compact
+gtk-icon-theme-name=Catppuccin-Mocha
 gtk-font-name=Overpass Nerd Font 11
 gtk-cursor-theme-name=Adwaita
 gtk-cursor-theme-size=24
@@ -862,8 +864,8 @@ EOF
 # Configure GTK4
 tee "$HOME_DIR/.config/gtk-4.0/settings.ini" > /dev/null <<'EOF'
 [Settings]
-gtk-theme-name=Dracula
-gtk-icon-theme-name=Dracula
+gtk-theme-name=Catppuccin-Lavender-Dark-Compact
+gtk-icon-theme-name=Catppuccin-Mocha
 gtk-font-name=Overpass Nerd Font 11
 gtk-cursor-theme-name=Adwaita
 gtk-cursor-theme-size=24
@@ -877,9 +879,9 @@ EOF
 
 # GTK4 also needs the GTK3 theme available
 mkdir -p "$HOME_DIR/.config/gtk-4.0"
-if [ -d "$HOME_DIR/.themes/Dracula" ] && [ ! -L "$HOME_DIR/.config/gtk-4.0/gtk.css" ]; then
-    ln -sf "$HOME_DIR/.themes/Dracula/gtk-4.0/gtk.css" "$HOME_DIR/.config/gtk-4.0/gtk.css" 2>/dev/null || true
-    ln -sf "$HOME_DIR/.themes/Dracula/gtk-4.0/gtk-dark.css" "$HOME_DIR/.config/gtk-4.0/gtk-dark.css" 2>/dev/null || true
+if [ -d "$HOME_DIR/.themes/Catppuccin-Lavender-Dark-Compact" ] && [ ! -L "$HOME_DIR/.config/gtk-4.0/gtk.css" ]; then
+    ln -sf "$HOME_DIR/.themes/Catppuccin-Lavender-Dark-Compact/gtk-4.0/gtk.css" "$HOME_DIR/.config/gtk-4.0/gtk.css" 2>/dev/null || true
+    ln -sf "$HOME_DIR/.themes/Catppuccin-Lavender-Dark-Compact/gtk-4.0/gtk-dark.css" "$HOME_DIR/.config/gtk-4.0/gtk-dark.css" 2>/dev/null || true
 fi
 
 print_step "GTK theme configured!"
@@ -888,7 +890,7 @@ print_step "GTK theme configured!"
 # Configure Qt Theme                  #
 #######################################
 
-print_step "Configuring Qt theme..."
+print_step "Configuring Qt theme (Catppuccin Kvantum)..."
 
 # Create necessary directories
 mkdir -p "$HOME_DIR/.config/qt5ct"
@@ -899,7 +901,7 @@ tee "$HOME_DIR/.config/qt5ct/qt5ct.conf" > /dev/null <<'EOF'
 [Appearance]
 color_scheme_path=
 custom_palette=false
-icon_theme=Dracula
+icon_theme=Catppuccin-Mocha
 standard_dialogs=default
 style=kvantum-dark
 
@@ -931,7 +933,7 @@ tee "$HOME_DIR/.config/qt6ct/qt6ct.conf" > /dev/null <<'EOF'
 [Appearance]
 color_scheme_path=
 custom_palette=false
-icon_theme=Dracula
+icon_theme=Catppuccin-Mocha
 standard_dialogs=default
 style=kvantum-dark
 
@@ -961,26 +963,21 @@ EOF
 # Configure Kvantum theme
 tee "$HOME_DIR/.config/Kvantum/kvantum.kvconfig" > /dev/null <<'EOF'
 [General]
-theme=Dracula
+theme=catppuccin-mocha-lavender
 EOF
 
 # Set environment variables for Qt theme
-if ! grep -q "QT_QPA_PLATFORMTHEME=qt5ct" "$HOME_DIR/.profile" 2>/dev/null; then
-    echo 'export QT_QPA_PLATFORMTHEME=qt5ct' >> "$HOME_DIR/.profile"
-fi
-
-if ! grep -q "QT_QPA_PLATFORMTHEME=qt5ct" "$HOME_DIR/.zprofile" 2>/dev/null; then
-    echo 'export QT_QPA_PLATFORMTHEME=qt5ct' >> "$HOME_DIR/.zprofile"
-fi
-
-# Set GTK theme environment variable
-if ! grep -q "GTK_THEME=Dracula" "$HOME_DIR/.profile" 2>/dev/null; then
-    echo 'export GTK_THEME=Dracula' >> "$HOME_DIR/.profile"
-fi
-
-if ! grep -q "GTK_THEME=Dracula" "$HOME_DIR/.zprofile" 2>/dev/null; then
-    echo 'export GTK_THEME=Dracula' >> "$HOME_DIR/.zprofile"
-fi
+for PROFILE_FILE in "$HOME_DIR/.profile" "$HOME_DIR/.zprofile"; do
+    if ! grep -q "QT_QPA_PLATFORMTHEME=qt5ct" "$PROFILE_FILE" 2>/dev/null; then
+        echo 'export QT_QPA_PLATFORMTHEME=qt5ct' >> "$PROFILE_FILE"
+    fi
+    if ! grep -q "GTK_THEME=Catppuccin-Lavender-Dark-Compact" "$PROFILE_FILE" 2>/dev/null; then
+        echo 'export GTK_THEME=Catppuccin-Lavender-Dark-Compact' >> "$PROFILE_FILE"
+    fi
+    if ! grep -q "ICON_THEME=Catppuccin-Mocha" "$PROFILE_FILE" 2>/dev/null; then
+        echo 'export ICON_THEME=Catppuccin-Mocha' >> "$PROFILE_FILE"
+    fi
+done
 
 print_step "Qt theme configured!"
 
@@ -1034,6 +1031,8 @@ if [ "$IS_LAPTOP" = true ]; then
 fi
 
 echo "✓ Optimized mirror list with reflector"
+echo "✓ Catppuccin GTK (Lavender Dark Compact) theme"
+echo "✓ Catppuccin Kvantum (mocha lavender) theme"
 echo ""
 
 if [ "$IS_LAPTOP" = true ]; then

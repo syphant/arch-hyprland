@@ -1,5 +1,5 @@
 # ==============================
-#  Basic Zsh Configuration
+#  Zsh Config
 # ==============================
 
 # Use modern completion system
@@ -21,20 +21,6 @@ setopt CORRECT                  # Spell correction for commands
 setopt EXTENDED_GLOB            # Advanced globbing
 setopt NO_BEEP                  # Disable terminal beep
 setopt PROMPT_SUBST             # Allow variable expansion in prompt
-
-# ==============================
-#  Prompt (using colors)
-# ==============================
-
-autoload -U colors && colors
-PROMPT='%{$fg[cyan]%}%n%{$reset_color%}@%{$fg[magenta]%}%m %{$fg[green]%}%~%{$reset_color%} $(git_prompt_info)
-%{$fg[blue]%}❯%{$reset_color%} '
-
-# Optional: Git branch info (simple version)
-git_prompt_info() {
-  local branch=$(git symbolic-ref --short HEAD 2>/dev/null)
-  [[ -n $branch ]] && echo "($branch)"
-}
 
 # ==============================
 #  Aliases
@@ -79,10 +65,15 @@ fi
 
 source ~/.zinit/bin/zinit.zsh
 
-# Example plugins
+# Plugins
 zinit light zsh-users/zsh-autosuggestions
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
+
+zinit ice as"command" from"gh-r" \
+          atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" \
+          atpull"%atclone" src"init.zsh"
+zinit light starship/starship
 
 # ==============================
 #  Path
@@ -101,6 +92,9 @@ bindkey "\e[F" end-of-line
 # Fix Page Up/Down to scroll through history
 bindkey "\e[5~" history-beginning-search-backward
 bindkey "\e[6~" history-beginning-search-forward
+
+# Fix Delete
+bindkey "^[[3~" delete-char
 
 # ==============================
 #  Terminal title (optional)
